@@ -37,10 +37,12 @@ namespace Invaders
             // animationTimer
             // 
             this.animationTimer.Interval = 33;
+            this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // gameTimer
             // 
             this.gameTimer.Interval = 10;
+            this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
             // Form1
             // 
