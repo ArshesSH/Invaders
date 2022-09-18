@@ -13,10 +13,15 @@ namespace Invaders
     public partial class Form1 : Form
     {
         #region Private Fields
-        Game game;
+        const int AnimationCellMax = 3;
 
         List<Keys> pressedKeys = new List<Keys>();
+        Game game;
         bool isGameOver = false;
+        Random random = new Random();
+
+        int animationCellCnt;
+        bool isIncreaseCellCnt;
         #endregion
 
 
@@ -24,32 +29,67 @@ namespace Invaders
         public Form1()
         {
             InitializeComponent();
+            game = new Game(random, ClientRectangle);
+            game.OnGameOver += new EventHandler(game_OnGameOver);
+            isIncreaseCellCnt = true;
+            animationTimer.Start();
         }
         #endregion
 
 
         #region Private Methods
-        private void OnKeyPressDown(object sender, KeyEventArgs e)
+        private void animationTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateAnimationCellCnt();
+            game.Twinkle();
+            Refresh();
+        }
+        private void gameTimer_Tick(object sender, EventArgs e)
+        {
+            if (!isGameOver)
+            {
+                if (pressedKeys.Count() >= 1)
+                {
+                    switch (pressedKeys[0])
+                    {
+                        case Keys.Left:
+                        {
+                            game.MovePlayer(Direction.Left);
+                        }
+                        break;
+                        case Keys.Right:
+                        {
+                            game.MovePlayer(Direction.Right);
+                        }
+                        break;
+                    }
+                }
+                game.Go();
+            }
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            game.Draw(e.Graphics, animationCellCnt, isGameOver);
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Q)
             {
                 Application.Exit();
             }
 
-            if(isGameOver)
+            if(e.KeyCode == Keys.S)
             {
-                if(e.KeyCode == Keys.S)
-                {
-                    // Reset Game
-                    return;
-                }
+                ResetGame();
+                return;
             }
 
             if(e.KeyCode == Keys.Space)
             {
-                //game.FireShot();
+                game.FireShot();
             }
-
 
             if(pressedKeys.Contains(e.KeyCode))
             {
@@ -57,46 +97,46 @@ namespace Invaders
             }
             pressedKeys.Add(e.KeyCode);
         }
-
-        private void OnKeyPressUp(object sender, KeyEventArgs e)
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             if(pressedKeys.Contains(e.KeyCode))
             {
                 pressedKeys.Remove(e.KeyCode);
             }
         }
-
-        private void OnGameOver(object sender, KeyEventArgs e)
+        private void game_OnGameOver(object sender, EventArgs e)
         {
             isGameOver = true;
-            //game.GameOver();
+            gameTimer.Stop();
+            Invalidate();
         }
-
-        private void animationTimer_Tick(object sender, EventArgs e)
+        private void ResetGame()
         {
-            //game.Draw(g, animationCell);
+            isGameOver = false;
+            game = new Game(random, ClientRectangle);
+            game.OnGameOver += new EventHandler(game_OnGameOver);
+            gameTimer.Start();
         }
-
-        private void gameTimer_Tick(object sender, EventArgs e)
+        private void UpdateAnimationCellCnt()
         {
-            if(pressedKeys.Count() >= 1)
+            if(isIncreaseCellCnt)
             {
-                switch(pressedKeys[0])
+                animationCellCnt++;
+                if (animationCellCnt == AnimationCellMax)
                 {
-                    case Keys.Left:
-                    {
-                        //game.MovePlayer(Direction.Left);
-                    }
-                    break;
-                    case Keys.Right:
-                    {
-                        //game.MovePlayer(Direction.Right);
-                    }
-                    break;
+                    isIncreaseCellCnt = false;
                 }
             }
-            //game.Go();
+            else
+            {
+                animationCellCnt--;
+                if (animationCellCnt == 0)
+                {
+                    isIncreaseCellCnt = true;
+                }
+            }
         }
         #endregion
+
     }
 }

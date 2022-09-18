@@ -9,24 +9,53 @@ namespace Invaders
 {
     class PlayerShip : SpaceShip
     {
-        #region Constructor
-        public PlayerShip(Point location)
+        public PlayerShip(Point location, Rectangle boundaries)
             :
-            base(location)
+            base(location,PlayerShipSize, MoveSpeed, MoveSpeed)
         {
+            image = Properties.Resources.player;
+            isAlive = true;
+            shipHeight = 1.0f;
+            Boundaries = boundaries;
+        }
 
+        #region Public Fields
+        public bool IsAlive
+        {
+            get
+            {
+                return isAlive;
+            }
+            set
+            {
+                isAlive = value;
+                if (!value)
+                {
+                    time = DateTime.Now;
+                }
+            }
+        }
+        public Rectangle Boundaries
+        {
+            get; protected set;
+        }
+        public static int PlayerShipSize
+        {
+            get { return playerShipSize; }
         }
         #endregion
 
-        #region Public Fields
-        public bool IsAlive;
-        #endregion
 
         #region Private Fields
-        bool isAlive = false;
-        int deadShipHeight;
+        const int playerShipSize = 50;
+        const int MoveSpeed = 10;
+        const float DeadTime = 3.0f;
+        bool isAlive;
+        float shipHeight;
         DateTime time;
+
         #endregion
+
 
         #region Public Methods
         public override void Move(Direction dir)
@@ -35,18 +64,26 @@ namespace Invaders
             {
                 case Direction.Left:
                 {
-                    Location = new Point(Location.X + horizontalInterval, Location.Y);
+                    Point nextPos = new Point(Location.X - horizontalInterval, Location.Y);
+                    if( nextPos.X > PlayerShipSize )
+                    {
+                        Location = nextPos;
+                    }
                 }
                 break;
                 case Direction.Right:
                 {
-                    Location = new Point(Location.X - horizontalInterval, Location.Y);
+                    Point nextPos = new Point(Location.X + horizontalInterval, Location.Y);
+                    if (nextPos.X < Boundaries.Width - PlayerShipSize)
+                    {
+                        Location = nextPos;
+                    }
                 }
                 break;
             }
         }
 
-        public override void Draw(Graphics g, int animationCell)
+        public override void Draw(Graphics g, int animationCell = 0)
         {
             if(IsAlive)
             {
@@ -54,6 +91,16 @@ namespace Invaders
             }
             else
             {
+                TimeSpan curTimeSpan = (DateTime.Now - time);
+                float curTime = (float)curTimeSpan.TotalSeconds;
+                float normalizedTime = curTime / 3.0f;
+                shipHeight = 1.0f - normalizedTime;
+
+                g.DrawImage(image, Location.X, Location.Y, image.Width, image.Height * shipHeight);
+                if(curTime >= 3.0f)
+                {
+                    isAlive = true;
+                }
             }
         }
 

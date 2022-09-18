@@ -10,13 +10,10 @@ namespace Invaders
     abstract class SpaceShip
     {
         #region Constructors
-        public SpaceShip(Point location)
+        public SpaceShip(Point location, int imageSize, int _horizontalInterval, int _verticalInterval)
         {
             Location = location;
-        }
-        public SpaceShip(Point location, int _horizontalInterval, int _verticalInterval)
-        {
-            Location = location;
+            ImageSize = imageSize;
             horizontalInterval = _horizontalInterval;
             verticalInterval = _verticalInterval;
         }
@@ -34,6 +31,10 @@ namespace Invaders
                 return new Rectangle(Location, image.Size);
             }
         }
+        public int ImageSize
+        {
+            get; protected set;
+        }
         #endregion
 
         #region Protected Fields
@@ -45,7 +46,7 @@ namespace Invaders
 
         #region Public Methods
         public abstract void Move(Direction dir);
-        public abstract void Draw(Graphics g, int animationCell);
+        public abstract void Draw(Graphics g, int animationCell = 0);
         #endregion
 
     }

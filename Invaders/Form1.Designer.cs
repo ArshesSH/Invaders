@@ -36,12 +36,12 @@ namespace Invaders
             // 
             // animationTimer
             // 
-            this.animationTimer.Interval = 33;
+            this.animationTimer.Interval = 66;
             this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // gameTimer
             // 
-            this.gameTimer.Interval = 10;
+            this.gameTimer.Interval = 33;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
             // Form1
@@ -55,6 +55,9 @@ namespace Invaders
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
 
         }
