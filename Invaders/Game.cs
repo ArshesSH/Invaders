@@ -235,17 +235,9 @@ namespace Invaders
                 return;
             }
 
-            var invaderColumns =
-                from invader in invaders
-                group invader by invader.Location.X into colums
-                select colums;
-            int randomNum = random.Next(invaderColumns.Count());
-            var randomInvaders = invaderColumns.ElementAt(randomNum);
-
-            var bottomInvaders =
-                from invader in randomInvaders
-                orderby invader.Location.Y descending
-                select invader;
+            var invaderGroups = invaders.GroupBy(i => i.Location.X);
+            var randomGroup = invaderGroups.ElementAt(random.Next(invaderGroups.Count()));
+            var bottomInvaders = randomGroup.OrderByDescending(i => i.Location.Y);
 
             Invader bottomInvader = bottomInvaders.First();
             Point firePos = new Point(bottomInvader.Location.X + bottomInvader.ImageSize / 2, bottomInvader.Location.Y + bottomInvader.ImageSize);
