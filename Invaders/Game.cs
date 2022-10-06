@@ -21,6 +21,7 @@ namespace Invaders
             invaders = new List<Invader>();
             playerShots = new List<Shot>();
             invaderShots = new List<Shot>();
+            lifeImage = Properties.Resources.player;
 
             NextWave();
         }
@@ -53,6 +54,8 @@ namespace Invaders
         private List<Shot> invaderShots;
 
         private Stars stars;
+
+        private Bitmap lifeImage;
         #endregion
 
 
@@ -109,7 +112,8 @@ namespace Invaders
             }
 
             g.DrawString($"Score: {score}", new Font("Consolas", 15, FontStyle.Bold), Brushes.White, new Point(boundaries.X + 10, boundaries.Y + 10));
-            g.DrawString($"Life: {life}", new Font("Consolas", 15, FontStyle.Bold), Brushes.White, new Point(boundaries.Width - 100, boundaries.Y + 10));
+            //g.DrawString($"Life: {life}", new Font("Consolas", 15, FontStyle.Bold), Brushes.White, new Point(boundaries.Width - 100, boundaries.Y + 10));
+            DrawLife(g);
 
             if(isGameOver)
             {
@@ -117,6 +121,36 @@ namespace Invaders
             }
 
         }
+
+        public void DrawLife(Graphics g)
+        {
+            switch(life)
+            {
+                case 3:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 200, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+
+                case 2:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+
+                case 1:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+            }
+
+
+        }
+
         public void Twinkle()
         {
             stars.Twinkle(random);
