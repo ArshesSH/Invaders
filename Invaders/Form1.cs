@@ -18,6 +18,7 @@ namespace Invaders
         List<Keys> pressedKeys = new List<Keys>();
         Game game;
         bool isGameOver = false;
+        bool isGameStarted = false;
         Random random = new Random();
 
         int animationCellCnt;
@@ -71,6 +72,10 @@ namespace Invaders
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             game.Draw(e.Graphics, animationCellCnt, isGameOver);
+            if(!isGameStarted)
+            {
+                game.DrawGuide(e.Graphics);
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -107,12 +112,14 @@ namespace Invaders
         private void game_OnGameOver(object sender, EventArgs e)
         {
             isGameOver = true;
+            isGameStarted = false;
             gameTimer.Stop();
             Invalidate();
         }
         private void ResetGame()
         {
             isGameOver = false;
+            isGameStarted = true;
             game = new Game(random, ClientRectangle);
             game.OnGameOver += new EventHandler(game_OnGameOver);
             gameTimer.Start();

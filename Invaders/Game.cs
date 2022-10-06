@@ -112,42 +112,13 @@ namespace Invaders
             }
 
             g.DrawString($"Score: {score}", new Font("Consolas", 15, FontStyle.Bold), Brushes.White, new Point(boundaries.X + 10, boundaries.Y + 10));
-            //g.DrawString($"Life: {life}", new Font("Consolas", 15, FontStyle.Bold), Brushes.White, new Point(boundaries.Width - 100, boundaries.Y + 10));
             DrawLife(g);
 
             if(isGameOver)
             {
-                g.DrawString($"GAME OVER", new Font("Consolas", 100, FontStyle.Bold), Brushes.White, new Point(150, 80));
+                g.DrawString($"GAME OVER", new Font("Consolas", 100, FontStyle.Bold), Brushes.Red, new Point(200, 100));
+                DrawGuide(g);
             }
-
-        }
-
-        public void DrawLife(Graphics g)
-        {
-            switch(life)
-            {
-                case 3:
-                {
-                    g.DrawImage(lifeImage, boundaries.Width - 200, boundaries.Y + 10, 50, 30);
-                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
-                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
-                }
-                break;
-
-                case 2:
-                {
-                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
-                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
-                }
-                break;
-
-                case 1:
-                {
-                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
-                }
-                break;
-            }
-
 
         }
 
@@ -170,10 +141,14 @@ namespace Invaders
                 playerShots.Add(new Shot(firePos, Direction.Up, boundaries));
             }
         }
+        public void DrawGuide(Graphics g)
+        {
+            g.DrawString($"Press S to Start", new Font("Consolas", 20, FontStyle.Bold), Brushes.White, new Point(450, 450));
+        }
         #endregion
 
-        #region Private Methods
 
+        #region Private Methods
         void MoveInvaders()
         {
             if(curFrame > skippedFrame)
@@ -301,6 +276,34 @@ namespace Invaders
                 }
             }
         }
+
+        void DrawLife(Graphics g)
+        {
+            switch (life)
+            {
+                case 3:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 200, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+
+                case 2:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 130, boundaries.Y + 10, 50, 30);
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+
+                case 1:
+                {
+                    g.DrawImage(lifeImage, boundaries.Width - 60, boundaries.Y + 10, 50, 30);
+                }
+                break;
+            }
+        }
+
         #endregion
     }
 }
